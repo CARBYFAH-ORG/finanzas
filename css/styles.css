@@ -849,6 +849,23 @@ table.tbl { width: 100%; border-collapse: collapse; }
 .payslip-net .pn-label { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--green-text); }
 .payslip-net .pn-amount { font-size: 1.55rem; font-weight: 700; color: var(--green-text); letter-spacing: -.01em; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Modal de confirmación (reemplaza window.confirm nativo) */
+.confirm-modal { max-width: 360px; padding: 28px 26px 24px; text-align: center; }
+.confirm-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--amber-soft);
+  color: var(--amber);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+}
+.confirm-icon svg { width: 24px; height: 24px; }
+.confirm-icon.danger { background: var(--red-soft); color: var(--red); }
+.confirm-msg { font-size: .92rem; color: var(--text); line-height: 1.5; margin-bottom: 22px; }
+.confirm-actions { display: flex; gap: 10px; justify-content: center; }
+.confirm-actions .btn { flex: 1; justify-content: center; }
 .modal .row2 { grid-template-columns: 1fr 1fr; }
 @media (max-width: 560px) {
   .modal .row2, .modal .row3 { grid-template-columns: 1fr !important; }
