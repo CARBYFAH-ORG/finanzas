@@ -54,7 +54,55 @@ APP.U = (function(){
     bg.classList.remove('show');
     bg.innerHTML = '';
   }
-  function confirmar(msg){ return window.confirm(msg); }
+  function confirmar(msg, opts){
+    opts = opts || {};
+    return new Promise(resolve => {
+      const bg = document.getElementById('modal-bg');
+      bg.innerHTML = `<div class="modal confirm-modal" onclick="event.stopPropagation()">
+        <div class="confirm-icon ${opts.danger?'danger':''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p class="confirm-msg">${esc(msg)}</p>
+        <div class="confirm-actions">
+          <button class="btn sec" id="confirm-no">Cancelar</button>
+          <button class="btn ${opts.danger?'danger':'success'}" id="confirm-yes">${opts.confirmText?esc(opts.confirmText):'Confirmar'}</button>
+        </div>
+      </div>`;
+      bg.classList.add('show');
+      const cerrar = (val) => { bg.classList.remove('show'); bg.innerHTML=''; resolve(val); };
+      bg.onclick = (ev) => { if (ev.target === bg) cerrar(false); };
+      document.getElementById('confirm-no').onclick = () => cerrar(false);
+      document.getElementById('confirm-yes').onclick = () => cerrar(true);
+    });
+  }
+
+  function promptMonto(titulo, opts){
+    opts = opts || {};
+    return new Promise(resolve => {
+      const bg = document.getElementById('modal-bg');
+      bg.innerHTML = `<div class="modal confirm-modal" onclick="event.stopPropagation()">
+        <p class="confirm-msg" style="margin-bottom:14px">${esc(titulo)}</p>
+        <input type="number" step="0.01" min="0.01" id="prompt-monto-input" placeholder="0.00" autofocus style="width:100%;background:var(--soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 12px;font-size:1rem;text-align:center;margin-bottom:18px">
+        <div class="confirm-actions">
+          <button class="btn sec" id="prompt-no">Cancelar</button>
+          <button class="btn success" id="prompt-yes">${opts.confirmText?esc(opts.confirmText):'Aportar'}</button>
+        </div>
+      </div>`;
+      bg.classList.add('show');
+      const input = document.getElementById('prompt-monto-input');
+      input.focus();
+      const cerrar = (val) => { bg.classList.remove('show'); bg.innerHTML=''; resolve(val); };
+      bg.onclick = (ev) => { if (ev.target === bg) cerrar(null); };
+      document.getElementById('prompt-no').onclick = () => cerrar(null);
+      const enviar = () => {
+        const v = Number(input.value);
+        if (!v || v <= 0) { input.style.borderColor = 'var(--red)'; return; }
+        cerrar(v);
+      };
+      document.getElementById('prompt-yes').onclick = enviar;
+      input.onkeydown = (ev) => { if (ev.key === 'Enter') enviar(); };
+    });
+  }
 
   // ---- Bootstrap cacheado: una sola llamada al backend trae
   // categorías, cuentas, config de sueldo, presupuesto y dashboard.
@@ -94,7 +142,7 @@ APP.U = (function(){
   }
 
   return { fmtFecha, fmtFechaHora, fmtFechaInput, fmtMoneda, esc,
-           toast, loader, openModal, closeModal, confirmar,
+           toast, loader, openModal, closeModal, confirmar, promptMonto,
            getCategorias, getCuentas, invalidar,
            getBootstrap, invalidarBootstrap, catNombre, catColor };
 })();
