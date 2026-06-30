@@ -99,8 +99,8 @@ function formMeta(m){
 }
 
 async function aportar(id, metas){
-  const monto = prompt('¿Cuánto quieres aportar a esta meta? (L.)');
-  if (!monto || isNaN(monto) || Number(monto) <= 0) return;
+  const monto = await APP.U.promptMonto('¿Cuánto quieres aportar a esta meta?');
+  if (!monto) return;
   const r = await APP.API.call('aportar_meta', {id, monto});
   if (!r.ok) { APP.U.toast(r.error,'error'); return; }
   APP.U.invalidarBootstrap();
@@ -109,7 +109,7 @@ async function aportar(id, metas){
 }
 
 async function eliminarMeta(id, btn){
-  if (!APP.U.confirmar('¿Eliminar esta meta?')) return;
+  if (!await APP.U.confirmar('¿Eliminar esta meta? Esta acción no se puede deshacer.', {danger:true, confirmText:'Eliminar'})) return;
   const original = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   const r = await APP.API.call('eliminar_meta', {id});
