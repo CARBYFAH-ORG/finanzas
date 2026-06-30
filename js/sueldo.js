@@ -99,7 +99,7 @@ APP.Views.sueldo = {
     };
 
     document.getElementById('pg-registrar').onclick = async function(){
-      if (!APP.U.confirmar('¿Registrar el ingreso de planilla de este mes por '+APP.U.fmtMoneda(calc.neto)+'?')) return;
+      if (!await APP.U.confirmar('¿Registrar el ingreso de planilla de este mes por '+APP.U.fmtMoneda(calc.neto)+'?', {confirmText:'Registrar'})) return;
       const original = this.innerHTML;
       this.disabled = true; this.innerHTML = '<span class="spinner"></span> Registrando…';
       const r = await APP.API.call('registrar_pago_planilla', {
