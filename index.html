@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanzas Personales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="login">
+  <div class="login-card">
+    <img class="logo" src="logo.png" alt="" onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex'">
+    <div class="logo-fb" id="logo-fb">L.</div>
+    <h1>Finanzas</h1>
+    <p class="sub">Control de ingresos, egresos y metas</p>
+    <form id="login-form">
+      <label>Usuario</label>
+      <input id="login-user" required autocomplete="username" placeholder="usuario">
+      <label>Contraseña</label>
+      <input id="login-pass" type="password" required autocomplete="current-password" placeholder="••••••••">
+      <button id="login-btn" type="submit">Ingresar</button>
+      <div class="login-err" id="login-err"></div>
+      <div class="login-hint">Acceso personal y privado</div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app" class="hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="logo.png" alt="" onerror="this.style.display='none';document.getElementById('brand-fb').style.display='grid'">
+      <div class="brand-fb" id="brand-fb">L.</div>
+      <div>
+        <b>FINANZAS</b>
+        <span>Control personal</span>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sfoot">
+      <div class="who" id="sf-who"></div>
+      <div class="rol" id="sf-rol"></div>
+      <button class="btn-logout" id="btn-logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Salir
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menubtn" id="menubtn" title="Menú">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h2 id="topbar-title">Dashboard</h2>
+      <div class="spacer"></div>
+      <div id="topbar-user" class="topbar-user"></div>
+    </header>
+    <main class="content" id="content"></main>
+    <footer class="foot">Uso personal y privado · Finanzas</footer>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-bg"></div>
+<div class="fullload" id="fullload"><div class="spinner lrg"></div></div>
+<div id="toasts"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/router.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/movimientos.js"></script>
+<script src="js/sueldo.js"></script>
+<script src="js/presupuesto.js"></script>
+<script src="js/metas.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
