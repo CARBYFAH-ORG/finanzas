@@ -6,9 +6,11 @@ APP.Views.dashboard = {
   title: 'Dashboard',
   render: async function(cont){
     APP.U.loader(true);
-    const [r, cats] = await Promise.all([APP.API.call('dashboard'), APP.U.getCategorias()]);
+    const b = await APP.U.getBootstrap(true); // true: siempre fresco al entrar al dashboard
     APP.U.loader(false);
-    if (!r.ok) { cont.innerHTML = '<div class="empty"><p>'+APP.U.esc(r.error)+'</p></div>'; return; }
+    if (!b.ok) { cont.innerHTML = '<div class="empty"><p>'+APP.U.esc(b.error)+'</p></div>'; return; }
+    const r = b.dashboard;
+    const cats = b.categorias;
 
     const saldoCls = r.saldo_actual >= 0 ? 'verde' : 'rojo';
     const superCls = r.superavit_mes >= 0 ? 'verde' : 'rojo';
