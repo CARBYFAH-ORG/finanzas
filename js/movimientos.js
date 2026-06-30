@@ -68,6 +68,7 @@ APP.Views.movimientos = {
           this.disabled = true; this.innerHTML = '<span class="spinner"></span>';
           const r = await APP.API.call('eliminar_movimiento', {id:b.dataset.del});
           if (!r.ok) { APP.U.toast(r.error,'error'); this.disabled=false; this.innerHTML=original; return; }
+          APP.U.invalidarBootstrap();
           APP.U.toast('Eliminado','warn');
           cargarTabla();
         };
@@ -124,6 +125,7 @@ function abrirFormMovimiento(m, cats, cuentas){
     if (isNew) r = await APP.API.call('crear_movimiento', data);
     else r = await APP.API.call('editar_movimiento', Object.assign({id:m.id}, data));
     if (!r.ok) { APP.U.toast(r.error,'error'); this.disabled=false; this.innerHTML=original; return; }
+    APP.U.invalidarBootstrap();
     APP.U.closeModal();
     APP.U.toast('Guardado','success');
     APP.Router.refresh();
