@@ -5,7 +5,7 @@
 window.APP = window.APP || {};
 
 // ▼ Pega aquí la URL de tu deploy de Apps Script cuando lo despliegues ▼
-const API_URL = 'https://script.google.com/macros/s/AKfycbwvgTwPMf4UpVLRvOjusoYIcy5OSdYcrXoDc7EVT2pMx68xFO7IQTmkT8UXClctJnfc/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbx1wxWaOLi2SFl3Hde1TUSFI4E5PBSw2lDMM8ULlrlILDsTELUswx49u9RMybpxmykl/exec';
 
 APP.API = (function () {
   async function _attempt(action, body) {
