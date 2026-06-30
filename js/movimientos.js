@@ -63,7 +63,7 @@ APP.Views.movimientos = {
       });
       document.querySelectorAll('[data-del]').forEach(b => {
         b.onclick = async function(){
-          if (!APP.U.confirmar('¿Eliminar este movimiento?')) return;
+          if (!await APP.U.confirmar('¿Eliminar este movimiento? Esta acción no se puede deshacer.', {danger:true, confirmText:'Eliminar'})) return;
           const original = this.innerHTML;
           this.disabled = true; this.innerHTML = '<span class="spinner"></span>';
           const r = await APP.API.call('eliminar_movimiento', {id:b.dataset.del});
