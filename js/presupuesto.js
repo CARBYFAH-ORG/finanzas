@@ -5,14 +5,13 @@ APP.Views.presupuesto = {
   title: 'Presupuesto',
   render: async function(cont){
     APP.U.loader(true);
-    const pR = await APP.API.call('obtener_presupuesto');
-    const cats = await APP.U.getCategorias();
-    const dashR = await APP.API.call('dashboard');
+    const b = await APP.U.getBootstrap();
     APP.U.loader(false);
-    if (!pR.ok) { cont.innerHTML = '<div class="empty"><p>'+APP.U.esc(pR.error)+'</p></div>'; return; }
-    const presup = pR.presupuesto;
+    if (!b.ok) { cont.innerHTML = '<div class="empty"><p>'+APP.U.esc(b.error)+'</p></div>'; return; }
+    const presup = b.presupuesto;
+    const cats = b.categorias;
     const catsEgreso = cats.filter(c => c.tipo === 'Egreso');
-    const ingresosMes = dashR.ok ? Number(dashR.ingresos_mes)||0 : 0;
+    const ingresosMes = Number(b.dashboard.ingresos_mes)||0;
 
     let html = `<div class="panel">
       <h3>Presupuesto por categoría</h3>
@@ -76,6 +75,7 @@ APP.Views.presupuesto = {
       const r = await APP.API.call('guardar_presupuesto', {items});
       this.disabled = false; this.innerHTML = original;
       if (!r.ok) { APP.U.toast(r.error,'error'); return; }
+      APP.U.invalidarBootstrap();
       APP.U.toast('Presupuesto actualizado','success');
     };
   }
