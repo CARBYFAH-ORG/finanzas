@@ -91,6 +91,7 @@ function formMeta(m){
     this.disabled = true; this.innerHTML = '<span class="spinner"></span> Guardando…';
     const r = isNew ? await APP.API.call('crear_meta', data) : await APP.API.call('editar_meta', Object.assign({id:m.id}, data));
     if (!r.ok) { APP.U.toast(r.error,'error'); this.disabled=false; this.innerHTML=original; return; }
+    APP.U.invalidarBootstrap();
     APP.U.closeModal();
     APP.U.toast('Guardado','success');
     APP.Router.refresh();
@@ -102,6 +103,7 @@ async function aportar(id, metas){
   if (!monto || isNaN(monto) || Number(monto) <= 0) return;
   const r = await APP.API.call('aportar_meta', {id, monto});
   if (!r.ok) { APP.U.toast(r.error,'error'); return; }
+  APP.U.invalidarBootstrap();
   APP.U.toast('Aporte registrado','success');
   APP.Router.refresh();
 }
@@ -112,6 +114,7 @@ async function eliminarMeta(id, btn){
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   const r = await APP.API.call('eliminar_meta', {id});
   if (!r.ok) { APP.U.toast(r.error,'error'); btn.disabled=false; btn.innerHTML=original; return; }
+  APP.U.invalidarBootstrap();
   APP.U.toast('Eliminada','warn');
   APP.Router.refresh();
 }
