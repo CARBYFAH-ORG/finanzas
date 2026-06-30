@@ -56,31 +56,45 @@ APP.U = (function(){
   }
   function confirmar(msg){ return window.confirm(msg); }
 
-  const cache = {categorias:null, cuentas:null};
+  // ---- Bootstrap cacheado: una sola llamada al backend trae
+  // categorías, cuentas, config de sueldo, presupuesto y dashboard.
+  // Las vistas lo consumen de aquí en vez de pedir cada cosa por separado.
+  let bootstrapCache = null;
+  let bootstrapPromise = null;
+
+  async function getBootstrap(force){
+    if (bootstrapCache && !force) return bootstrapCache;
+    if (bootstrapPromise && !force) return bootstrapPromise;
+    bootstrapPromise = APP.API.call('bootstrap').then(r => {
+      bootstrapPromise = null;
+      if (r.ok) bootstrapCache = r;
+      return r;
+    });
+    return bootstrapPromise;
+  }
+  function invalidarBootstrap(){ bootstrapCache = null; }
+
   async function getCategorias(force){
-    if (cache.categorias && !force) return cache.categorias;
-    const r = await APP.API.call('listar_categorias');
-    cache.categorias = r.ok ? r.categorias : [];
-    return cache.categorias;
+    const b = await getBootstrap(force);
+    return b.ok ? b.categorias : [];
   }
   async function getCuentas(force){
-    if (cache.cuentas && !force) return cache.cuentas;
-    const r = await APP.API.call('listar_cuentas');
-    cache.cuentas = r.ok ? r.cuentas : [];
-    return cache.cuentas;
+    const b = await getBootstrap(force);
+    return b.ok ? b.cuentas : [];
   }
-  function invalidar(k){ cache[k] = null; }
+  function invalidar(k){ invalidarBootstrap(); }
 
   function catNombre(cod, cats){
-    const c = (cats||cache.categorias||[]).find(x=>x.codigo===cod);
+    const c = (cats||(bootstrapCache?bootstrapCache.categorias:[])||[]).find(x=>x.codigo===cod);
     return c ? c.nombre : cod;
   }
   function catColor(cod, cats){
-    const c = (cats||cache.categorias||[]).find(x=>x.codigo===cod);
+    const c = (cats||(bootstrapCache?bootstrapCache.categorias:[])||[]).find(x=>x.codigo===cod);
     return c ? c.color : '#94a3b8';
   }
 
   return { fmtFecha, fmtFechaHora, fmtFechaInput, fmtMoneda, esc,
            toast, loader, openModal, closeModal, confirmar,
-           getCategorias, getCuentas, invalidar, catNombre, catColor };
+           getCategorias, getCuentas, invalidar,
+           getBootstrap, invalidarBootstrap, catNombre, catColor };
 })();
