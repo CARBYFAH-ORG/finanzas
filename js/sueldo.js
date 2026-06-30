@@ -5,13 +5,12 @@ APP.Views.sueldo = {
   title: 'Sueldo',
   render: async function(cont){
     APP.U.loader(true);
-    const cfgR = await APP.API.call('obtener_config_sueldo');
-    const calcR = await APP.API.call('calcular_sueldo_neto');
-    const cuentas = await APP.U.getCuentas();
+    const b = await APP.U.getBootstrap();
     APP.U.loader(false);
-    if (!cfgR.ok) { cont.innerHTML = '<div class="empty"><p>'+APP.U.esc(cfgR.error)+'</p></div>'; return; }
-    const cfg = cfgR.config;
-    const calc = calcR.calculo;
+    if (!b.ok) { cont.innerHTML = '<div class="empty"><p>'+APP.U.esc(b.error)+'</p></div>'; return; }
+    const cfg = b.config_sueldo;
+    const calc = b.calculo_sueldo;
+    const cuentas = b.cuentas;
 
     let html = `
     <div class="panel-grid">
@@ -94,6 +93,7 @@ APP.Views.sueldo = {
       if (!r.ok) { APP.U.toast(r.error,'error'); this.disabled=false; this.innerHTML=original; return; }
       this.disabled = false; this.innerHTML = original;
       APP.U.toast('Configuración guardada','success');
+      APP.U.invalidarBootstrap();
       const c2 = await APP.API.call('calcular_sueldo_neto');
       if (c2.ok) pintarCalculo(c2.calculo);
     };
@@ -108,6 +108,7 @@ APP.Views.sueldo = {
       });
       if (!r.ok) { APP.U.toast(r.error,'error'); this.disabled=false; this.innerHTML=original; return; }
       this.disabled = false; this.innerHTML = original;
+      APP.U.invalidarBootstrap();
       APP.U.toast('Pago de planilla registrado: '+APP.U.fmtMoneda(r.calculo.neto),'success');
     };
   }
