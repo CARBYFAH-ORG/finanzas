@@ -475,6 +475,43 @@ input, select, textarea { font-family: inherit; }
   flex-direction: column;
 }
 
+/* ===== FILTROS DASHBOARD ===== */
+.dash-filtros {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.df-group { display: flex; flex-direction: column; gap: 5px; }
+.df-group label { font-size: .72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .04em; }
+.df-group input[type="date"],
+.df-group select {
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  font-size: .86rem;
+  color: var(--text);
+  min-width: 140px;
+}
+.df-group input:focus, .df-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+.df-btns { flex-direction: row; gap: 8px; margin-left: auto; }
+@media (max-width: 768px) {
+  .dash-filtros { flex-direction: column; }
+  .df-group input[type="date"], .df-group select { width: 100%; }
+  .df-btns { margin-left: 0; }
+}
+
 /* ===== TABLA ===== */
 .tbl-wrap {
   background: var(--card);
