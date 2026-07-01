@@ -38,15 +38,15 @@ APP.Views.movimientos = {
       if (!movs.length) { tblCont.innerHTML = '<div class="empty"><p>Sin movimientos</p></div>'; return; }
 
       let h = '<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn sec sm" id="btn-export">Exportar Excel</button></div>';
-      h += '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Motivo</th><th>Cuenta</th><th style="text-align:right">Monto</th><th></th></tr></thead><tbody>';
+      h += '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Fecha</th><th>Tipo</th><th class="hide-mobile">Categoría</th><th>Motivo</th><th class="hide-mobile">Cuenta</th><th style="text-align:right">Monto</th><th></th></tr></thead><tbody>';
       movs.forEach(m => {
         const cls = m.tipo === 'Ingreso' ? 'reportada' : 'vencida';
         h += `<tr class="row-click" data-id="${APP.U.esc(m.id)}">
           <td>${APP.U.fmtFecha(m.fecha)}</td>
           <td><span class="badge ${cls}">${APP.U.esc(m.tipo)}</span></td>
-          <td>${APP.U.esc(APP.U.catNombre(m.categoria,cats))}</td>
+          <td class="hide-mobile">${APP.U.esc(APP.U.catNombre(m.categoria,cats))}</td>
           <td>${APP.U.esc(m.motivo)}</td>
-          <td>${APP.U.esc((cuentas.find(c=>c.codigo===m.cuenta)||{}).nombre || m.cuenta || '—')}</td>
+          <td class="hide-mobile">${APP.U.esc((cuentas.find(c=>c.codigo===m.cuenta)||{}).nombre || m.cuenta || '—')}</td>
           <td style="text-align:right;font-weight:700;color:${m.tipo==='Ingreso'?'var(--green-text)':'var(--red-text)'}">${m.tipo==='Ingreso'?'+':'-'}${APP.U.fmtMoneda(m.monto)}</td>
           <td><button class="btn sm danger no-click" data-del="${APP.U.esc(m.id)}">Eliminar</button></td>
         </tr>`;
