@@ -42,10 +42,16 @@ APP.Views.presupuesto = {
         <div id="presup-list"></div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;
-                    margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-          <div>
-            <b id="presup-total"   style="font-size:.95rem;display:block"></b>
-            <span id="presup-total-monto" style="font-size:.78rem;color:var(--text-dim)"></span>
+                    margin-top:14px;padding-top:14px;border-top:2px solid var(--border)">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="display:flex;gap:20px;align-items:baseline;flex-wrap:wrap">
+              <b id="presup-total" style="font-size:.95rem"></b>
+              <span id="presup-libre-pct" style="font-size:.88rem;color:var(--text-dim)"></span>
+            </div>
+            <div style="display:flex;gap:20px;align-items:baseline;flex-wrap:wrap">
+              <span id="presup-total-monto" style="font-size:.78rem;color:var(--text-dim)"></span>
+              <span id="presup-libre-mon"   style="font-size:.78rem;color:var(--text-dim)"></span>
+            </div>
           </div>
           <button class="btn" id="presup-guardar">Guardar presupuesto</button>
         </div>
@@ -59,7 +65,8 @@ APP.Views.presupuesto = {
       const mon = ingresosMes > 0 ? ingresosMes * pct / 100 : 0;
       return `
         <div style="display:grid;grid-template-columns:16px 1fr 110px 90px 14px;
-                    gap:10px;align-items:center;margin-bottom:10px">
+                    gap:10px;align-items:center;padding:9px 2px;
+                    border-bottom:1px solid var(--border)">
           <span style="width:10px;height:10px;border-radius:50%;
                        background:${APP.U.esc(c.color)};display:block"></span>
           <span style="font-size:.88rem">${APP.U.esc(c.nombre)}</span>
@@ -84,13 +91,18 @@ APP.Views.presupuesto = {
         </div>`;
     }).join('');
 
+    // Agrega borde superior al contenedor de filas
+    list.style.borderTop = '1px solid var(--border)';
+
     // ── Conversión bidireccional ───────────────────────────
     function pctToMonto(pct){ return ingresosMes > 0 ? ingresosMes * pct / 100 : 0; }
     function montoToPct(mon){ return ingresosMes > 0 ? mon / ingresosMes * 100  : 0; }
 
     function fmtPct(v){
       const n = Number(v);
-      return n > 0 ? (Number.isInteger(n) ? String(n) : n.toFixed(1)) : '';
+      if (!n) return '';
+      // 6 decimales para que la vuelta monto→%→monto no derive
+      return parseFloat(n.toFixed(6)).toString();
     }
     function fmtMon(v){
       const n = Number(v);
@@ -104,14 +116,28 @@ APP.Views.presupuesto = {
         sumPct += Number(i.value) || 0;
         sumMon += pctToMonto(Number(i.value) || 0);
       });
-      const elT = document.getElementById('presup-total');
-      const elM = document.getElementById('presup-total-monto');
-      elT.textContent = 'Total asignado: ' + sumPct.toFixed(1) + '%';
+      const librePct = Math.max(0, 100 - sumPct);
+      const libreMon = Math.max(0, ingresosMes - sumMon);
+
+      const elT  = document.getElementById('presup-total');
+      const elM  = document.getElementById('presup-total-monto');
+      const elLP = document.getElementById('presup-libre-pct');
+      const elLM = document.getElementById('presup-libre-mon');
+
+      elT.textContent = 'Total asignado: ' + sumPct.toFixed(2) + '%';
       elT.style.color  = sumPct > 100 ? 'var(--red-text)'
                        : sumPct < 100 ? 'var(--amber-text)'
                        : 'var(--green-text)';
+
       elM.textContent = 'Equivale a ' + APP.U.fmtMoneda(sumMon)
                       + ' de ' + APP.U.fmtMoneda(ingresosMes);
+
+      elLP.textContent = '· Libres: ' + librePct.toFixed(2) + '%';
+      elLP.style.color  = librePct > 0 ? 'var(--green-text)' : 'var(--text-dim)';
+
+      elLM.textContent = libreMon > 0
+        ? '· Libres: ' + APP.U.fmtMoneda(libreMon)
+        : '';
     }
 
     // Cuando cambia el campo de MONTO → actualiza %
